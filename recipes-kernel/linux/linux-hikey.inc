@@ -12,6 +12,7 @@ require recipes-kernel/linux/linux-dtb.inc
 LOCALVERSION ?= "+linaro"
 SCMVERSION ?= "y"
 
+
 S = "${WORKDIR}/git"
 
 kernel_conf_variable() {
