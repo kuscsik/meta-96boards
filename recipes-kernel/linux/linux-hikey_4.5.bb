@@ -8,7 +8,7 @@ SRCREV_kernel="623d1d7bbd697e5793a135d5334e02c0e9889ba1"
 SRCREV_linuxoptee = "5fcce5d5800a60957141f1d963edfd199480bfcb"
 
 
-SRC_URI = "git://github.com/xin3liang/linux;branch=hikey-tracking-integration-devel-drm;protocol=https;name=kernel \
+SRC_URI = "git://github.com/kuscsik/linux;branch=hikey-4.5-drm;protocol=https;name=kernel \
         ${@bb.utils.contains('MACHINE_FEATURES', 'optee', 'git://github.com/OP-TEE/optee_linuxdriver;protocol=https;branch=master;destsuffix=${S}/optee_linuxdriver;name=linuxoptee', '', d)} \
            file://defconfig;name=defconfig  \
           "
