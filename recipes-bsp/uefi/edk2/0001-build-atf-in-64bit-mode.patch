@@ -1,0 +1,12 @@
+diff --git a/platforms.config b/platforms.config
+index 2db0d24..38177c1 100644
+--- a/LinaroPkg/platforms.config
++++ b/LinaroPkg/platforms.config
+@@ -116,6 +116,7 @@ SCP_BIN=HisiPkg/HiKeyPkg/NonFree/mcuimage.bin
+ #ATF_BUILDFLAGS=CONSOLE_BASE=PL011_UART0_BASE CRASH_CONSOLE_BASE=PL011_UART0_BASE
+ # Uncomment this to use UART0 as the OP-TEE Trusted OS console
+ #TOS_BUILDFLAGS=CFG_CONSOLE_UART=0
++TOS_BUILDFLAGS=ta-targets=ta_arm64
+ 
+ [xen64]
+ LONGNAME=AArch64 Xen guest

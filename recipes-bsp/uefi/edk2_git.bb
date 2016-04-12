@@ -8,26 +8,35 @@ DEPENDS += "util-linux-native"
 
 inherit deploy
 
-PV = "0.0+${SRCPV}"
+PV = "2.0+${SRCPV}"
 
 SRCREV_FORMAT = "edk2-atf"
 
-EDKBRANCH ?= "${MACHINE_ARCH}"
-SRCREV_edk2 = "53596a72cd96f84c7ca83254246f3520a49861b1"
-SRCREV_edk2_hikey = "12d63b5f3627a000b5e39c559c37c5a8f304305a"
+EDKBRANCH ?= "hikey"
 
-ATFBRANCH ?= "${MACHINE_ARCH}"
-SRCREV_atf = "68fc81743e8671312a98c364ba2b0d69429cf4c6"
-SRCREV_atf_hikey = "e8b71743247d3d5fee89e1a382f3315a543f8416"
+SRCREV_edk2_hikey = "7da6cdf18127ee52e79f3cf990c8d630fd037784"
 
-SRCREV_uefitools = "9b024328afa28ad27760f94df2375618bcf325b2"
+ATFBRANCH ?= "hikey_gendrv"
 
+SRCREV_atf_hikey = "9d3b0ecf9ffaf52f918b3870d69a55c42fb7fbac"
+
+SRCREV_uefitools = "fdb4ea64f3f7a228d70e3b3646fb52943d703823"
+
+LINAROPKGBRANCH ?= "hikey"
+
+SRCREV_linaropkg = "3e28745338147c4e2a4751b7a1196fcdcf0b7695"
+
+SRCREV_opteeos = "${OPTEE_OS_REVISON}"
+
+OPTEEOSBRANCH ?= "master"
 SRC_URI = "git://github.com/96boards/edk2.git;name=edk2;branch=${EDKBRANCH} \
-           git://github.com/96boards/arm-trusted-firmware.git;name=atf;branch=${ATFBRANCH};destsuffix=git/atf \
-           git://git.linaro.org/uefi/uefi-tools.git;name=uefitools;destsuffix=git/uefi-tools \
-	   file://0001-accomodate-OE-to-let-it-provide-its-own-native-sysro.patch \
-	   file://0001-Check-the-result-of-fread.patch \
+           git://github.com/linaro-swg/arm-trusted-firmware.git;name=atf;branch=${ATFBRANCH};destsuffix=git/atf \
+           git://git.linaro.org/uefi/uefi-tools.git;name=uefitools;destsuffix=git/uefi-tools \ 
+           git://github.com/96boards/LinaroPkg.git;name=linaropkg;destsuffix=git/LinaroPkg;branch=${LINAROPKGBRANCH} \
+           git://github.com/OP-TEE/optee_os.git;name=opteeos;destsuffix=git/optee-os;branch=${OPTEEOSBRANCH}  \
+           file://0001-build-atf-in-64bit-mode.patch; \
           "
+
 
 S = "${WORKDIR}/git"
 
@@ -48,8 +57,16 @@ LDFLAGS = ""
 
 export UEFIMACHINE ?= "${MACHINE_ARCH}"
 
+OPTEE_BUILD_ARGS = "${@base_contains('MACHINE_FEATURES', 'optee', '-s optee-os', '', d)}"
+
 do_compile() {
-    ${UEFI_TOOLS_DIR}/uefi-build.sh -b RELEASE -a ${S}/atf ${UEFIMACHINE}
+
+    # We can't pass the sysroot to OP TEE build system in 
+    # OE way. Without setting the sysroot, the OP TEE build
+    # scripts fail to locate the gcc static libraries.
+    export CFLAGS="$CFLAGS --sysroot=${STAGING_DIR_HOST} "
+
+    ${UEFI_TOOLS_DIR}/uefi-build.sh -b RELEASE -a ${S}/atf -c LinaroPkg/platforms.config ${OPTEE_BUILD_ARGS} ${UEFIMACHINE} 
 }
 
 do_install() {
