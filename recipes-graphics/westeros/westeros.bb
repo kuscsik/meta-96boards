@@ -13,9 +13,10 @@ PACKAGECONFIG[xdgv4] = "--enable-xdgv4=yes"
 PACKAGECONFIG[xdgv5] = "--enable-xdgv5=yes"
 PACKAGECONFIG[xdgv5] = "--enable-=yes"
 
-COMPATIBLE_MACHINE = "(hikey-32|raspberrypi2)"
+COMPATIBLE_MACHINE = "(hikey-32|raspberrypi2|dragonboard-410c-32)"
 
 WESTEROS_GRAPHIC_PLATFORM_hikey-32 = "drm"
+WESTEROS_GRAPHIC_PLATFORM_dragonboard-410c-32 = "drm"
 WESTEROS_GRAPHIC_PLATFORM_raspberrypi2 = "rpi"
 WESTEROS_GRAPHIC_PLATFORM_brcm = "brcm"
 
